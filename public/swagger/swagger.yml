@@ -1,0 +1,50 @@
+openapi: 3.0.0
+consumes:
+- application/json
+info:
+  description: 'Online API info and Tester'
+  title: Market
+  version: v1
+paths:
+  /login:
+    post:
+      requestBody:
+        description: send mobile number to verify
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: s.fouladi
+                password:
+                   type: string
+                   example: 3169945454
+      responses:
+        '200':
+          description: successful operation
+      summary: Authentication with user and password
+      tags:
+      - Users
+
+tags:
+- description: ''
+  name: Users
+- description: ''
+  name: Services
+- description: ''
+  name: Request
+- description: ''
+  name: Posts
+- description: ''
+  name: Notifications
+servers:
+- url: '127.0.0.1:8000/api/v1'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
