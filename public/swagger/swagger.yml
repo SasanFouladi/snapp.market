@@ -9,7 +9,7 @@ paths:
   /login:
     post:
       requestBody:
-        description: send mobile number to verify
+        description: Authentication with username and password
         required: true
         content:
           application/json:
@@ -25,21 +25,94 @@ paths:
       responses:
         '200':
           description: successful operation
-      summary: Authentication with user and password
+      summary: Authentication with username and password
       tags:
       - Users
+  /products/add:
+    post:
+      requestBody:
+        description: import excel file to mysql and elastic search
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                excel_file:
+                  type: file
+                  example: products.xlsx
+                add_to_elastic_search:
+                   type: boolean
+                   example: true
+      responses:
+        '200':
+          description: status is success
+      summary: import excel file to mysql and elastic search
+      tags:
+      - Products
+  /products/categories:
+          get:
+             summary: get product gategories list from elastic search
+             tags:
+                 - Products
+             description: get product gategories list from elastic search
+             produces:
+             - "application/xml"
+             - "application/json"
+             parameters: null
+             responses:
+               200:
+                 description: "successful operation"
+             security:
+             - api_key: []
+
+  /products/search:
+        get:
+          summary: search word and get items of product and boost of category match
+          tags:
+              - Products
+          description: search word and get items of product and boost of category match
+          produces:
+          - "application/xml"
+          - "application/json"
+          parameters:
+          - name: "q"
+            description: "search key"
+            required: true
+            type: "string"
+          responses:
+            200:
+              description: "successful operation"
+          security:
+          - api_key: []
+  /products/category/index:
+          get:
+            summary: search word and get items of product and boost of category match
+            tags:
+                - Products
+            description:  get items of category of product
+            produces:
+            - "application/xml"
+            - "application/json"
+            parameters:
+            - name: "category"
+              in: "query"
+              description: "category name"
+              required: true
+              type: "string"
+            responses:
+              200:
+                description: "successful operation"
+            security:
+            - api_key: []
+
 
 tags:
 - description: ''
   name: Users
 - description: ''
-  name: Services
-- description: ''
-  name: Request
-- description: ''
-  name: Posts
-- description: ''
-  name: Notifications
+  name: Products
+
 servers:
 - url: '127.0.0.1:8000/api/v1'
 components:
