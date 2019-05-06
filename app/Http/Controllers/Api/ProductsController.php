@@ -41,22 +41,34 @@ class ProductsController extends Controller
 
     public function getCategories()
     {
-        //echo 'here'; die;
-        //Product::putMapping($ignoreConflicts = true);
-        $articles = Product::searchByQuery(
-            ''
-            ,
-            [
-                'categories'=>[
-                    "terms"=>[
-                        'field'=>'category',
-                        "size"=> 12
+//        Product::putMapping($ignoreConflicts = true);
+        $products = Product::complexSearch(
+                [
+                    "body"=>[
+                        "aggs"=>[
+                            'categories'=>[
+                                "terms"=>[
+                                    'field'=>'category.keyword',
+                                    'size'=>50,
+                                ]
+                            ]
+                        ]
                     ]
                 ]
-            ],
-            ['category'],100
+        )->toArray();
+        $products = Product::searchByQuery(
+                '',
+                [
+                    'categories'=>[
+                        "terms"=>[
+                            'field'=>'category.keyword',
+                            'size'=>50,
+                        ]
+                    ]
+                ]
         );
-        return $this->success('',$articles);
+        $categories = $products->getAggregations()['categories']['buckets'];
+        return $this->success('',$categories);
     }
 
     public function getCategoryItems(Request $request)
@@ -67,16 +79,26 @@ class ProductsController extends Controller
 
     public function search(Request $request)
     {
-        $searchKey = $request->get('q');
+        $searchKey = "*".$request->get('q')."*";
+
+        //dd($searchKey);
         $products = Product::searchByQuery(
             [
-                'multi_match' => [
-                    "query"=>$searchKey,
-                    "fields"=>[
-                        'name',
-                        'category^2'
-                    ],
-                    "operator"=> "or"
+                "bool"=>[
+                    "should"=>[
+                        [   "query_string"=>[
+                                "default_field"=>"name",
+                                "query"=>$searchKey
+                            ]
+                        ],
+                        ['match' => [
+                                'category' => [
+                                    "query"=> $request->get('q'),
+                                    "boost"=>2
+                                ],
+                            ]
+                        ]
+                    ]
                 ]
             ]
         )->toArray();
@@ -84,38 +106,3 @@ class ProductsController extends Controller
     }
 
 }
-
-/**
- *              ,
-[
-"bool"=>[
-"must"=> [
-"match"=> [
-"name"=> [
-"query"=>    $searchKey,
-//"operator"=> "and"
-]
-]
-],
-"should"=> [
-[
-"match"=> [
-"name"=> [
-"query"=> $searchKey,
-"boost"=> 3
-]
-]
-],
-[
-"match"=> [
-"category"=> [
-"query"=> $searchKey,
-"boost"=> 2
-]
-]
-]
-]
-
-]
-]
- */

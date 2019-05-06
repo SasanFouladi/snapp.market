@@ -17,17 +17,15 @@ use Illuminate\Http\Request;
 
 Route::namespace('Api')->prefix('v1')->group(function () {
 
-    Route::post('login', 'UserController@login');
+    Route::post('login', 'UserController@login')->name('user.login');
 
-    Route::middleware('auth:api')->group(function () {
-
-        Route::prefix('products')->group(function () {
+    Route::prefix('products')->group(function () {
+        Route::middleware('auth:api')->group(function () {
             Route::post('add', 'ProductsController@create');
-            Route::get('categories', 'ProductsController@getCategories');
-            Route::get('category/index', 'ProductsController@getCategoryItems');
-            Route::get('search', 'ProductsController@search');
         });
-
+        Route::get('categories', 'ProductsController@getCategories');
+        Route::get('category/index', 'ProductsController@getCategoryItems');
+        Route::get('search', 'ProductsController@search');
     });
 });
 

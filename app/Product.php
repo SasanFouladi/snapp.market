@@ -15,6 +15,13 @@ class Product extends Model
         'category' => [
             'type' => 'text',
             "analyzer" => "standard",
+            "fields"=>[
+                "keyword"=>[
+                    "type"=>"keyword",
+                    "ignore_above"=>256,
+                    "index"=>"not_analyzed"
+                ]
+            ]
             //"Fielddata "=> true,
         ],
         'name' => [
@@ -39,42 +46,4 @@ class Product extends Model
         ],
     );
 
-    /*protected $indexSettings = [
-        'analysis' => [
-            'char_filter' => [
-                'replace' => [
-                    'type' => 'mapping',
-                    'mappings' => [
-                        '&=> and '
-                    ],
-                ],
-            ],
-            'filter' => [
-                'word_delimiter' => [
-                    'type' => 'word_delimiter',
-                    'split_on_numerics' => false,
-                    'split_on_case_change' => true,
-                    'generate_word_parts' => true,
-                    'generate_number_parts' => true,
-                    'catenate_all' => true,
-                    'preserve_original' => true,
-                    'catenate_numbers' => true,
-                ]
-            ],
-            'analyzer' => [
-                'default' => [
-                    'type' => 'custom',
-                    'char_filter' => [
-                        'html_strip',
-                        'replace',
-                    ],
-                    'tokenizer' => 'whitespace',
-                    'filter' => [
-                        'lowercase',
-                        'word_delimiter',
-                    ],
-                ],
-            ],
-        ],
-    ];*/
 }
