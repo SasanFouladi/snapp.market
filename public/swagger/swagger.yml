@@ -63,8 +63,6 @@ paths:
              responses:
                200:
                  description: "successful operation"
-             security:
-             - api_key: []
 
   /products/search:
         get:
@@ -83,8 +81,7 @@ paths:
           responses:
             200:
               description: "successful operation"
-          security:
-          - api_key: []
+
   /products/category/index:
           get:
             summary: search word and get items of product and boost of category match
@@ -103,8 +100,6 @@ paths:
             responses:
               200:
                 description: "successful operation"
-            security:
-            - api_key: []
 
 
 tags:
@@ -114,7 +109,7 @@ tags:
   name: Products
 
 servers:
-- url: '127.0.0.1:8000/api/v1'
+- url: 'http://localhost:800/market/public//api/v1'
 components:
   securitySchemes:
     bearerAuth:
