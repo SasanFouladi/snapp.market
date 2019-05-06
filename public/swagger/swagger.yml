@@ -47,6 +47,8 @@ paths:
       responses:
         '200':
           description: status is success
+      security:
+         - api_key: []
       summary: import excel file to mysql and elastic search
       tags:
       - Products
@@ -109,7 +111,7 @@ tags:
   name: Products
 
 servers:
-- url: 'http://localhost:800/market/public//api/v1'
+- url: 'http://localhost:8000/api/v1'
 components:
   securitySchemes:
     bearerAuth:

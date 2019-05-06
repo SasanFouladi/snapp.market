@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+header('Access-Control-Allow-Origin: *');
+header( 'Access-Control-Allow-Headers: Authorization, Content-Type' );
 
-
-Route::namespace('Api')->prefix('v1')->group(function () {
+Route::namespace('Api')->middleware('cors')->prefix('v1')->group(function () {
 
     Route::post('login', 'UserController@login')->name('user.login');
 
