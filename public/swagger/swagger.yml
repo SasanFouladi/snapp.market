@@ -31,25 +31,27 @@ paths:
   /products/add:
     post:
       requestBody:
-        description: import excel file to mysql and elastic search
-        required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                excel_file:
-                  type: file
-                  example: products.xlsx
-                add_to_elastic_search:
-                   type: boolean
-                   example: true
+                  excel_file:
+                    type: file
+                    items:
+                     type: string
+                     format: binary
+                  add_to_elastic_search:
+                      type: boolean
       responses:
         '200':
           description: status is success
+        401 :
+          description: Unauthenticated
       security:
-         - api_key: []
+        - bearerAuth: []
       summary: import excel file to mysql and elastic search
+
       tags:
       - Products
   /products/categories:
@@ -61,44 +63,49 @@ paths:
              produces:
              - "application/xml"
              - "application/json"
-             parameters: null
+             parameters: []
              responses:
                200:
                  description: "successful operation"
 
-  /products/search:
+  /products/search/{q}:
         get:
           summary: search word and get items of product and boost of category match
           tags:
               - Products
           description: search word and get items of product and boost of category match
           produces:
-          - "application/xml"
-          - "application/json"
+             - "application/xml"
+             - "application/json"
           parameters:
-          - name: "q"
-            description: "search key"
-            required: true
-            type: "string"
+              - name: "q"
+                in: "path"
+                schema:
+                    type: string
+                description: "search key"
+                required: true
           responses:
             200:
               description: "successful operation"
+            400:
+              description: "not found"
 
-  /products/category/index:
+  /products/category/index/{category}:
           get:
             summary: search word and get items of product and boost of category match
             tags:
                 - Products
             description:  get items of category of product
             produces:
-            - "application/xml"
-            - "application/json"
+              - "application/xml"
+              - "application/json"
             parameters:
-            - name: "category"
-              in: "query"
-              description: "category name"
-              required: true
-              type: "string"
+                - name: "category"
+                  in: "path"
+                  schema:
+                      type: string
+                  description: "search key"
+                  required: true
             responses:
               200:
                 description: "successful operation"

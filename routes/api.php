@@ -25,8 +25,8 @@ Route::namespace('Api')->middleware('cors')->prefix('v1')->group(function () {
             Route::post('add', 'ProductsController@create');
         });
         Route::get('categories', 'ProductsController@getCategories');
-        Route::get('category/index', 'ProductsController@getCategoryItems');
-        Route::get('search', 'ProductsController@search');
+        Route::get('category/index/{category}', 'ProductsController@getCategoryItems');
+        Route::get('search/{q}', 'ProductsController@search');
     });
 });
 

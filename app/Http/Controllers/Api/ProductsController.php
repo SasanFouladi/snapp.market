@@ -42,20 +42,20 @@ class ProductsController extends Controller
     public function getCategories()
     {
 //        Product::putMapping($ignoreConflicts = true);
-        $products = Product::complexSearch(
-                [
-                    "body"=>[
-                        "aggs"=>[
-                            'categories'=>[
-                                "terms"=>[
-                                    'field'=>'category.keyword',
-                                    'size'=>50,
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-        )->toArray();
+//        $products = Product::complexSearch(
+//                [
+//                    "body"=>[
+//                        "aggs"=>[
+//                            'categories'=>[
+//                                "terms"=>[
+//                                    'field'=>'category.keyword',
+//                                    'size'=>50,
+//                                ]
+//                            ]
+//                        ]
+//                    ]
+//                ]
+//        )->toArray();
         $products = Product::searchByQuery(
                 '',
                 [
@@ -71,15 +71,15 @@ class ProductsController extends Controller
         return $this->success('',$categories);
     }
 
-    public function getCategoryItems(Request $request)
+    public function getCategoryItems($category)
     {
-        $products = Product::searchByQuery(['match' => ['category' => $request->get('category')]])->toArray();
+        $products = Product::searchByQuery(['match' => ['category' => $category]])->toArray();
         return $this->success('',$products);
     }
 
-    public function search(Request $request)
+    public function search($q)
     {
-        $searchKey = "*".$request->get('q')."*";
+        $searchKey = "*".$q."*";
 
         //dd($searchKey);
         $products = Product::searchByQuery(
@@ -93,7 +93,7 @@ class ProductsController extends Controller
                         ],
                         ['match' => [
                                 'category' => [
-                                    "query"=> $request->get('q'),
+                                    "query"=> $q,
                                     "boost"=>2
                                 ],
                             ]
